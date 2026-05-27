@@ -1,0 +1,14 @@
+D:\Coding Space\FPT\PRN212\DesignPattern\bin\Debug\net10.0\DesignPattern.exe
+D:\Coding Space\FPT\PRN212\DesignPattern\bin\Debug\net10.0\DesignPattern.deps.json
+D:\Coding Space\FPT\PRN212\DesignPattern\bin\Debug\net10.0\DesignPattern.runtimeconfig.json
+D:\Coding Space\FPT\PRN212\DesignPattern\bin\Debug\net10.0\DesignPattern.dll
+D:\Coding Space\FPT\PRN212\DesignPattern\bin\Debug\net10.0\DesignPattern.pdb
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.AssemblyInfoInputs.cache
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.AssemblyInfo.cs
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.csproj.CoreCompileInputs.cache
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.dll
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\refint\DesignPattern.dll
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.pdb
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\DesignPattern.genruntimeconfig.cache
+D:\Coding Space\FPT\PRN212\DesignPattern\obj\Debug\net10.0\ref\DesignPattern.dll
