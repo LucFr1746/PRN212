@@ -1,0 +1,14 @@
+D:\Coding Space\FPT\PRN212\Delegate\bin\Debug\net10.0\Delegate.exe
+D:\Coding Space\FPT\PRN212\Delegate\bin\Debug\net10.0\Delegate.deps.json
+D:\Coding Space\FPT\PRN212\Delegate\bin\Debug\net10.0\Delegate.runtimeconfig.json
+D:\Coding Space\FPT\PRN212\Delegate\bin\Debug\net10.0\Delegate.dll
+D:\Coding Space\FPT\PRN212\Delegate\bin\Debug\net10.0\Delegate.pdb
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.AssemblyInfoInputs.cache
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.AssemblyInfo.cs
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.csproj.CoreCompileInputs.cache
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.dll
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\refint\Delegate.dll
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.pdb
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\Delegate.genruntimeconfig.cache
+D:\Coding Space\FPT\PRN212\Delegate\obj\Debug\net10.0\ref\Delegate.dll
