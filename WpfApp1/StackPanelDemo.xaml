@@ -1,0 +1,70 @@
+<Page x:Class="WpfApp1.StackPanelDemo"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp1"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="StackPanelDemo">
+
+    <Grid Background="#1E1E2F">
+        <DockPanel LastChildFill="True">
+            <!-- Top Bar: Navigation & Title -->
+            <Border Height="60" Background="#2A2A40" DockPanel.Dock="Top" Padding="15,0">
+                <DockPanel LastChildFill="False">
+                    <Button x:Name="BtnBack" Content="⬅ Quay lại" Click="BtnBack_Click" DockPanel.Dock="Left" Background="Transparent" Foreground="#A0A0B0" BorderThickness="0" FontSize="14" Cursor="Hand" VerticalAlignment="Center"/>
+                    <TextBlock Text="Demo StackPanel" Foreground="White" FontSize="18" FontWeight="Bold" DockPanel.Dock="Left" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                </DockPanel>
+            </Border>
+
+            <!-- Main StackPanel Area -->
+            <Border Margin="20" Background="#252538" CornerRadius="8" Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Column 0: Vertical StackPanel -->
+                    <Border Grid.Column="0" Background="#1A1A2E" Margin="10" Padding="15" CornerRadius="6">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Xếp chồng Dọc (Vertical)" Foreground="#4A90E2" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <TextBlock Text="Họ và tên:" Foreground="#8FA0B5" Margin="0,0,0,5"/>
+                            <TextBox Text="Nguyễn Văn A" Background="#1E1E2F" Foreground="White" BorderBrush="#3A3A55" Padding="8" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Email:" Foreground="#8FA0B5" Margin="0,0,0,5"/>
+                            <TextBox Text="anv@example.com" Background="#1E1E2F" Foreground="White" BorderBrush="#3A3A55" Padding="8" Margin="0,0,0,20"/>
+
+                            <Button Content="Gửi thông tin" Background="#4A90E2" Foreground="White" Padding="10" BorderThickness="0" FontWeight="Bold" Cursor="Hand"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Column 1: Horizontal StackPanel -->
+                    <Border Grid.Column="1" Background="#1A1A2E" Margin="10" Padding="15" CornerRadius="6">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Xếp chồng Ngang (Horizontal)" Foreground="#FFCC00" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <TextBlock Text="Các nút thao tác xếp ngang:" Foreground="#8FA0B5" Margin="0,0,0,15" TextWrapping="Wrap"/>
+                            
+                            <!-- Horizontal stack of buttons -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                                <Button Content="Lưu" Width="60" Height="35" Background="#2E7D32" Foreground="White" BorderThickness="0" Margin="0,0,10,0"/>
+                                <Button Content="Sửa" Width="60" Height="35" Background="#1565C0" Foreground="White" BorderThickness="0" Margin="0,0,10,0"/>
+                                <Button Content="Xóa" Width="60" Height="35" Background="#C62828" Foreground="White" BorderThickness="0"/>
+                            </StackPanel>
+
+                            <TextBlock Text="Các input xếp ngang:" Foreground="#8FA0B5" Margin="0,0,0,5"/>
+                            <!-- Horizontal stack of textboxes -->
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="Code" Width="60" Background="#1E1E2F" Foreground="White" BorderBrush="#3A3A55" Padding="6" Margin="0,0,10,0" TextAlignment="Center"/>
+                                <TextBox Text="Tên sản phẩm..." Width="180" Background="#1E1E2F" Foreground="White" BorderBrush="#3A3A55" Padding="6"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </DockPanel>
+    </Grid>
+</Page>
