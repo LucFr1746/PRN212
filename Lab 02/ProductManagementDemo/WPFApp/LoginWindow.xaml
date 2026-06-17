@@ -1,0 +1,210 @@
+<Window x:Class="WPFApp.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFApp"
+        mc:Ignorable="d"
+        Title="Login - ProductStore Portal" Height="450" Width="400"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        MouseDown="Window_MouseDown">
+
+    <Border CornerRadius="20" BorderThickness="1" BorderBrush="#3f405c">
+        <!-- Main Background Gradient -->
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1a1a2e" Offset="0.0"/>
+                <GradientStop Color="#16213e" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Close Button Top Right -->
+            <Button Content="✕" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top" 
+                    Background="Transparent" 
+                    Foreground="#8e90a6" 
+                    BorderThickness="0" 
+                    FontSize="16" 
+                    Cursor="Hand"
+                    Click="btnCancel_Click"
+                    Grid.Row="0"
+                    Margin="0,-10,-10,0"
+                    Width="30" Height="30">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="15">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#ff6b6b"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Header Panel -->
+            <StackPanel Grid.Row="0" Margin="0,10,0,25" HorizontalAlignment="Center">
+                <TextBlock Text="ProductStore" 
+                           Foreground="#ffffff" 
+                           FontSize="28" 
+                           FontWeight="Bold" 
+                           FontFamily="Segoe UI"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="Management Portal" 
+                           Foreground="#00d2fc" 
+                           FontSize="13" 
+                           FontWeight="Medium" 
+                           FontFamily="Segoe UI"
+                           HorizontalAlignment="Center" 
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <!-- Login Form -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                <!-- Username/Email Field -->
+                <TextBlock Text="Email Address" 
+                           Foreground="#a2a5b9" 
+                           FontSize="11" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,8" 
+                           FontFamily="Segoe UI"/>
+                <Border Background="#0f172a" 
+                        CornerRadius="8" 
+                        BorderThickness="1" 
+                        BorderBrush="#3f405c" 
+                        Height="40" 
+                        Margin="0,0,0,20">
+                    <Grid>
+                        <TextBox x:Name="txtUser" 
+                                 Background="Transparent" 
+                                 BorderThickness="0" 
+                                 Foreground="#ffffff" 
+                                 FontSize="13" 
+                                 VerticalAlignment="Center" 
+                                 Margin="10,0" 
+                                 CaretBrush="#ffffff"
+                                 Text="admin@CompanyName.com"/>
+                    </Grid>
+                </Border>
+
+                <!-- Password Field -->
+                <TextBlock Text="Password" 
+                           Foreground="#a2a5b9" 
+                           FontSize="11" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,8" 
+                           FontFamily="Segoe UI"/>
+                <Border Background="#0f172a" 
+                        CornerRadius="8" 
+                        BorderThickness="1" 
+                        BorderBrush="#3f405c" 
+                        Height="40" 
+                        Margin="0,0,0,10">
+                    <PasswordBox x:Name="txtPass" 
+                                 Background="Transparent" 
+                                 BorderThickness="0" 
+                                 Foreground="#ffffff" 
+                                 FontSize="13" 
+                                 VerticalAlignment="Center" 
+                                 Margin="10,0" 
+                                 CaretBrush="#ffffff"
+                                 Password="@1"/>
+                </Border>
+
+                <!-- Validation Message -->
+                <TextBlock x:Name="TxtError" 
+                           Foreground="#ff6b6b" 
+                           FontSize="12" 
+                           FontWeight="Medium" 
+                           Margin="0,5,0,10" 
+                           TextWrapping="Wrap"
+                           Visibility="Collapsed"/>
+            </StackPanel>
+
+            <!-- Buttons Panel -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+                <!-- Login Button -->
+                <Button x:Name="btnLogin" 
+                        Width="150" Height="40" 
+                        Margin="0,0,10,0" 
+                        Click="btnLogin_Click" 
+                        Cursor="Hand"
+                        IsDefault="True">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="8" x:Name="border">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#6c5ce7" Offset="0.0"/>
+                                        <GradientStop Color="#a55eea" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter Content="Sign In" 
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center" 
+                                                  TextBlock.Foreground="White"
+                                                  TextBlock.FontWeight="Bold"
+                                                  TextBlock.FontSize="14"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#5f4ed0" Offset="0.0"/>
+                                                <GradientStop Color="#934ad2" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Cancel Button -->
+                <Button x:Name="btnCancel" 
+                        Width="150" Height="40" 
+                        Click="btnCancel_Click" 
+                        Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="8" BorderThickness="1" BorderBrush="#ff6b6b" Background="Transparent" x:Name="border">
+                                <ContentPresenter Content="Cancel" 
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center" 
+                                                  TextBlock.Foreground="#ff6b6b"
+                                                  TextBlock.FontWeight="Bold"
+                                                  TextBlock.FontSize="14"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#1aff6b6b"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
