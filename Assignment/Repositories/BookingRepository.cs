@@ -20,5 +20,7 @@ namespace Assignment.Repositories
         public void DeleteReservation(int id) => BookingReservationDAO.Instance.Delete(id);
 
         public List<BookingDetail> GetReport(DateOnly startDate, DateOnly endDate) => BookingReservationDAO.Instance.GetReportDetails(startDate, endDate);
+
+        public bool IsRoomOverlapping(int roomId, DateOnly startDate, DateOnly endDate, int? excludeReservationId = null) => BookingReservationDAO.Instance.IsRoomOverlapping(roomId, startDate, endDate, excludeReservationId);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Assignment.BusinessObjects;
 using Microsoft.EntityFrameworkCore;
@@ -80,30 +81,57 @@ namespace Assignment.DataAccess
             }
         }
 
+        /// <summary>
+        /// Checks whether a room has overlapping bookings in the database for the given date range.
+        /// Uses the interval overlap condition: existingStart &lt; endDate AND existingEnd &gt; startDate.
+        /// Optionally excludes a reservation (for edit scenarios to avoid self-conflict).
+        /// </summary>
+        public bool IsRoomOverlapping(int roomId, DateOnly startDate, DateOnly endDate, int? excludeReservationId = null)
+        {
+            using var context = new FuminiHotelManagementContext();
+            return context.BookingDetails.Any(bd =>
+                bd.RoomId == roomId &&
+                (excludeReservationId == null || bd.BookingReservationId != excludeReservationId) &&
+                bd.StartDate < endDate &&
+                bd.EndDate > startDate
+            );
+        }
+
         public void Add(BookingReservation reservation)
         {
             try
             {
                 using var context = new FuminiHotelManagementContext();
-                
-                // Set the default reservation ID if it is 0 or check if it already exists
-                // Note: database does not have identity on BookingReservationID (it was set to int NOT NULL, ValueGeneratedNever)
-                // So we can generate a new ID dynamically: Max(ID) + 1
+                using var transaction = context.Database.BeginTransaction(IsolationLevel.Serializable);
+
+                // Generate new ID
                 if (reservation.BookingReservationId == 0)
                 {
                     int maxId = context.BookingReservations.Max(br => (int?)br.BookingReservationId) ?? 0;
                     reservation.BookingReservationId = maxId + 1;
                 }
 
+                // Re-validate room availability inside the transaction to prevent race conditions
                 foreach (var detail in reservation.BookingDetails)
                 {
+                    bool isOverlapping = context.BookingDetails.Any(bd =>
+                        bd.RoomId == detail.RoomId &&
+                        bd.StartDate < detail.EndDate &&
+                        bd.EndDate > detail.StartDate
+                    );
+                    if (isOverlapping)
+                    {
+                        transaction.Rollback();
+                        throw new Exception($"Room {detail.RoomId} is no longer available for the selected dates. Another booking was made concurrently.");
+                    }
                     detail.BookingReservationId = reservation.BookingReservationId;
                 }
 
                 context.BookingReservations.Add(reservation);
                 context.SaveChanges();
+                transaction.Commit();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.Message.Contains("no longer available"))
             {
                 throw new Exception($"Error adding reservation: {ex.Message}");
             }
@@ -114,38 +142,54 @@ namespace Assignment.DataAccess
             try
             {
                 using var context = new FuminiHotelManagementContext();
-                
-                // Load existing reservation from DB to update details properly
+                using var transaction = context.Database.BeginTransaction(IsolationLevel.Serializable);
+
                 var existing = context.BookingReservations
                     .Include(br => br.BookingDetails)
                     .FirstOrDefault(br => br.BookingReservationId == reservation.BookingReservationId);
 
-                if (existing != null)
+                if (existing == null)
                 {
-                    // Update main properties
-                    existing.BookingDate = reservation.BookingDate;
-                    existing.TotalPrice = reservation.TotalPrice;
-                    existing.CustomerId = reservation.CustomerId;
-                    existing.BookingStatus = reservation.BookingStatus;
-
-                    // Remove existing details
-                    context.BookingDetails.RemoveRange(existing.BookingDetails);
-
-                    // Add new details
-                    foreach (var detail in reservation.BookingDetails)
-                    {
-                        detail.BookingReservationId = reservation.BookingReservationId;
-                        context.BookingDetails.Add(detail);
-                    }
-
-                    context.SaveChanges();
-                }
-                else
-                {
+                    transaction.Rollback();
                     throw new Exception("Reservation not found.");
                 }
+
+                // Re-validate room availability inside the transaction, excluding self
+                foreach (var detail in reservation.BookingDetails)
+                {
+                    bool isOverlapping = context.BookingDetails.Any(bd =>
+                        bd.RoomId == detail.RoomId &&
+                        bd.BookingReservationId != reservation.BookingReservationId &&
+                        bd.StartDate < detail.EndDate &&
+                        bd.EndDate > detail.StartDate
+                    );
+                    if (isOverlapping)
+                    {
+                        transaction.Rollback();
+                        throw new Exception($"Room {detail.RoomId} is no longer available for the selected dates. Another booking was made concurrently.");
+                    }
+                }
+
+                // Update main properties
+                existing.BookingDate = reservation.BookingDate;
+                existing.TotalPrice = reservation.TotalPrice;
+                existing.CustomerId = reservation.CustomerId;
+                existing.BookingStatus = reservation.BookingStatus;
+
+                // Remove existing details
+                context.BookingDetails.RemoveRange(existing.BookingDetails);
+
+                // Add new details
+                foreach (var detail in reservation.BookingDetails)
+                {
+                    detail.BookingReservationId = reservation.BookingReservationId;
+                    context.BookingDetails.Add(detail);
+                }
+
+                context.SaveChanges();
+                transaction.Commit();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.Message.Contains("no longer available") && !ex.Message.Contains("not found"))
             {
                 throw new Exception($"Error updating reservation: {ex.Message}");
             }
@@ -189,3 +233,4 @@ namespace Assignment.DataAccess
         }
     }
 }
+

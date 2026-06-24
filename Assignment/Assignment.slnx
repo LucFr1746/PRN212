@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="Assignment.csproj" />
+  <Project Path="Assignment.Tests/Assignment.Tests.csproj" />
   <Project Path="BusinessObjects/BusinessObjects.csproj" />
   <Project Path="DataAccess/DataAccess.csproj" />
   <Project Path="Repositories/Repositories.csproj" />

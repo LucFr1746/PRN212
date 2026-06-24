@@ -127,29 +127,15 @@ namespace Assignment
                 return;
             }
 
-            var start = DateOnly.FromDateTime(dpStart.SelectedDate.Value);
-            var end = DateOnly.FromDateTime(dpEnd.SelectedDate.Value);
-
-            if (start >= end)
-            {
-                MessageBox.Show("Start Date must be before End Date.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             if (!decimal.TryParse(txtActualPrice.Text.Trim(), out decimal actualPrice) || actualPrice < 0)
             {
                 MessageBox.Show("Please enter a valid price.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Check duplicate room in details
-            if (_detailsCollection.Any(d => d.RoomId == selectedRoom.RoomId))
-            {
-                MessageBox.Show("This room is already added to this reservation.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            var start = DateOnly.FromDateTime(dpStart.SelectedDate.Value);
+            var end = DateOnly.FromDateTime(dpEnd.SelectedDate.Value);
 
-            // Add detail to collection
             var detail = new BookingDetail
             {
                 RoomId = selectedRoom.RoomId,
@@ -158,6 +144,18 @@ namespace Assignment
                 EndDate = end,
                 ActualPrice = actualPrice
             };
+
+            // Delegate all business validation to the service layer
+            try
+            {
+                int? excludeId = _existingReservation?.BookingReservationId;
+                _bookingService.ValidateBookingDetail(detail, _detailsCollection, excludeId);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             _detailsCollection.Add(detail);
             RecalculateTotal();

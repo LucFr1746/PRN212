@@ -454,9 +454,9 @@ namespace Assignment
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtCustPhone.Text))
+            if (!Assignment.Shared.ValidationHelper.IsValidPhone(txtCustPhone.Text))
             {
-                MessageBox.Show("Telephone cannot be empty.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Telephone must be a valid number of 9 to 12 digits.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

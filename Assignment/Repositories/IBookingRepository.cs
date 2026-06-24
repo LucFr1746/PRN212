@@ -13,5 +13,6 @@ namespace Assignment.Repositories
         void UpdateReservation(BookingReservation reservation);
         void DeleteReservation(int id);
         List<BookingDetail> GetReport(DateOnly startDate, DateOnly endDate);
+        bool IsRoomOverlapping(int roomId, DateOnly startDate, DateOnly endDate, int? excludeReservationId = null);
     }
 }

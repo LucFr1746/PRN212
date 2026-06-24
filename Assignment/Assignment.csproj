@@ -13,14 +13,17 @@
     <Compile Remove="DataAccess\**" />
     <Compile Remove="Repositories\**" />
     <Compile Remove="Services\**" />
+    <Compile Remove="Assignment.Tests\**" />
     <EmbeddedResource Remove="BusinessObjects\**" />
     <EmbeddedResource Remove="DataAccess\**" />
     <EmbeddedResource Remove="Repositories\**" />
     <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="Assignment.Tests\**" />
     <None Remove="BusinessObjects\**" />
     <None Remove="DataAccess\**" />
     <None Remove="Repositories\**" />
     <None Remove="Services\**" />
+    <None Remove="Assignment.Tests\**" />
   </ItemGroup>
 
   <ItemGroup>

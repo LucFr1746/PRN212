@@ -115,13 +115,13 @@ namespace Assignment
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(txtPhone.Text) || !Regex.IsMatch(txtPhone.Text.Trim(), @"^\d{9,12}$"))
+            if (!Assignment.Shared.ValidationHelper.IsValidPhone(txtPhone.Text))
             {
                 message = "Telephone must be a valid number of 9 to 12 digits.";
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(txtEmail.Text) || !Regex.IsMatch(txtEmail.Text.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            if (!Assignment.Shared.ValidationHelper.IsValidEmail(txtEmail.Text))
             {
                 message = "Please enter a valid email address.";
                 return false;
