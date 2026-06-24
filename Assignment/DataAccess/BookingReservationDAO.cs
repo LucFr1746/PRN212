@@ -91,7 +91,7 @@ namespace Assignment.DataAccess
                 // So we can generate a new ID dynamically: Max(ID) + 1
                 if (reservation.BookingReservationId == 0)
                 {
-                    int maxId = context.BookingReservations.Select(br => br.BookingReservationId).DefaultIfEmpty(0).Max();
+                    int maxId = context.BookingReservations.Max(br => (int?)br.BookingReservationId) ?? 0;
                     reservation.BookingReservationId = maxId + 1;
                 }
 

@@ -423,6 +423,13 @@
                                         Focusable="False">
                                     <TextBlock Text="📅" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Button>
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=border}"
+                                       StaysOpen="False">
+                                    <Calendar x:Name="PART_Calendar" />
+                                </Popup>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>

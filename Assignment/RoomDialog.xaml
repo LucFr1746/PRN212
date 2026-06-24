@@ -50,14 +50,13 @@
             </ScrollViewer>
         </Border>
 
-        <!-- Actions -->
         <Grid Grid.Row="2" Margin="0,15,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="Save Room Details" Foreground="White" Margin="0,0,8,0" Click="BtnSave_Click" IsDefault="True"/>
-            <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="BtnCancel_Click" IsCancel="True"/>
+            <Button Grid.Column="0" Content="Save Room Details" Foreground="White" Margin="0,0,8,0" Click="BtnSave_Click" IsDefault="True"/>
+            <Button Grid.Column="1" Content="Cancel" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="BtnCancel_Click" IsCancel="True"/>
         </Grid>
     </Grid>
 </Window>

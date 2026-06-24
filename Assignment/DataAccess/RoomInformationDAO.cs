@@ -108,15 +108,11 @@ namespace Assignment.DataAccess
                     bool hasRentingTransaction = context.BookingDetails.Any(bd => bd.RoomId == id);
                     if (hasRentingTransaction)
                     {
-                        // Just change status to 0 (Inactive)
-                        room.RoomStatus = 0;
-                        context.Entry(room).State = EntityState.Modified;
+                        throw new Exception("Cannot delete this room because it is associated with existing booking reservations.");
                     }
-                    else
-                    {
-                        // Hard delete
-                        context.RoomInformations.Remove(room);
-                    }
+
+                    // Hard delete
+                    context.RoomInformations.Remove(room);
                     context.SaveChanges();
                 }
             }

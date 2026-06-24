@@ -59,7 +59,7 @@ namespace Assignment.DataAccess
             try
             {
                 using var context = new FuminiHotelManagementContext();
-                return context.Customers.FirstOrDefault(c => c.EmailAddress.Equals(email, StringComparison.OrdinalIgnoreCase));
+                return context.Customers.FirstOrDefault(c => c.EmailAddress.ToLower() == email.ToLower());
             }
             catch (Exception ex)
             {
@@ -113,6 +113,13 @@ namespace Assignment.DataAccess
                 var customer = context.Customers.Find(id);
                 if (customer != null)
                 {
+                    // Check if customer is associated with any booking reservation
+                    bool hasBookingReservations = context.BookingReservations.Any(br => br.CustomerId == id);
+                    if (hasBookingReservations)
+                    {
+                        throw new Exception("Cannot delete this customer because they have existing booking reservations.");
+                    }
+
                     context.Customers.Remove(customer);
                     context.SaveChanges();
                 }

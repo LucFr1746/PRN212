@@ -31,6 +31,10 @@ namespace Assignment
 
             LoadDropdowns();
 
+            // Wire up date change events to dynamically update actual price
+            dpStart.SelectedDateChanged += (s, e) => UpdateCalculatedPrice();
+            dpEnd.SelectedDateChanged += (s, e) => UpdateCalculatedPrice();
+
             if (_existingReservation != null)
             {
                 // Edit Mode
@@ -78,9 +82,34 @@ namespace Assignment
 
         private void CbRoom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cbRoom.SelectedItem is RoomInformation selectedRoom)
+            UpdateCalculatedPrice();
+        }
+
+        private void UpdateCalculatedPrice()
+        {
+            if (cbRoom.SelectedItem is RoomInformation selectedRoom &&
+                dpStart.SelectedDate.HasValue &&
+                dpEnd.SelectedDate.HasValue)
             {
-                txtActualPrice.Text = selectedRoom.RoomPricePerDay?.ToString("0.##") ?? "0";
+                var start = DateOnly.FromDateTime(dpStart.SelectedDate.Value);
+                var end = DateOnly.FromDateTime(dpEnd.SelectedDate.Value);
+                if (end > start)
+                {
+                    int days = end.DayNumber - start.DayNumber;
+                    decimal pricePerDay = selectedRoom.RoomPricePerDay ?? 0;
+                    txtActualPrice.Text = (pricePerDay * days).ToString("0.##");
+                    return;
+                }
+            }
+            
+            // Fallback to room's daily price if dates are not valid or not selected
+            if (cbRoom.SelectedItem is RoomInformation room)
+            {
+                txtActualPrice.Text = room.RoomPricePerDay?.ToString("0.##") ?? "0";
+            }
+            else
+            {
+                txtActualPrice.Text = "0";
             }
         }
 
