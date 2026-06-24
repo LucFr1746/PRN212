@@ -1,0 +1,16 @@
+using System.Collections.Generic;
+using Assignment.BusinessObjects;
+
+namespace Assignment.Services
+{
+    public interface ICustomerService
+    {
+        List<Customer> GetAllCustomers();
+        Customer? GetCustomerById(int id);
+        Customer? GetCustomerByEmail(string email);
+        void AddCustomer(Customer customer);
+        void UpdateCustomer(Customer customer);
+        void DeleteCustomer(int id);
+        Customer? Login(string email, string password);
+    }
+}

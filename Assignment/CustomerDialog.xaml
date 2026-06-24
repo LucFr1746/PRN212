@@ -1,0 +1,63 @@
+<Window x:Class="Assignment.CustomerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Customer Information" 
+        Height="500" Width="440"
+        WindowStartupLocation="CenterOwner"
+        Background="#F8FAFC"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock x:Name="txtTitle" Text="Customer Details" FontSize="18" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,15"/>
+
+        <!-- Form fields inside a card border -->
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}" Padding="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Full Name -->
+                    <TextBlock Text="Full Name" FontSize="11" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtFullName" Margin="0,0,0,12"/>
+
+                    <!-- Telephone -->
+                    <TextBlock Text="Telephone" FontSize="11" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtPhone" Margin="0,0,0,12"/>
+
+                    <!-- Email Address -->
+                    <TextBlock Text="Email Address" FontSize="11" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtEmail" Margin="0,0,0,12"/>
+
+                    <!-- Birthday -->
+                    <TextBlock Text="Birthday" FontSize="11" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <DatePicker x:Name="dpBirthday" Height="32" Margin="0,0,0,12" VerticalContentAlignment="Center"/>
+
+                    <!-- Status -->
+                    <TextBlock Text="Status" FontSize="11" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="cbStatus" Height="32" Margin="0,0,0,12" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Active" Tag="1"/>
+                        <ComboBoxItem Content="Inactive" Tag="0"/>
+                    </ComboBox>
+
+                    <!-- Password -->
+                    <TextBlock Text="Password" FontSize="11" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtPassword"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Action buttons -->
+        <Grid Grid.Row="2" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="Save Customer" Foreground="White" Margin="0,0,8,0" Click="BtnSave_Click" IsDefault="True"/>
+            <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="BtnCancel_Click" IsCancel="True"/>
+        </Grid>
+    </Grid>
+</Window>

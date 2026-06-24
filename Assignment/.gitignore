@@ -1,0 +1,87 @@
+## Visual Studio ##
+## Ignore Visual Studio temporary files, build results, and
+## user-specific settings.
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Mono auto generated files
+mono_crash.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Re]leases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bin]/
+[Obj]/
+bin/
+obj/
+Log/
+Logs/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Uncomment if next line matches your project structure
+#src/packages/
+
+# Roslyn cache directories
+*.cshtml.g.cs
+*.aspx.g.cs
+*.asax.g.cs
+*.ashx.g.cs
+
+# Detailed results directory for tests
+[Tt]est[Rr]esults/
+
+# Deployment service temp files
+UsingFiles/
+
+# Microsoft Fakes
+FakesAssemblies/
+
+# GhostDoc Local Settings
+*.GhostDoc.xml
+
+# Rider
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# If using NuGet legacy packages.config, uncomment next line:
+# !**/packages/config/
+# Authoring templates all-in-one
+# !**/packages/templates/
+
+# Enable restoration of NuGet packages repository-wide
+!**/packages/repositories.config
+
+# BOWER
+bower_components/
+
+# Node
+node_modules/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
