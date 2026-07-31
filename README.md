@@ -1,7 +1,5 @@
-# PRN212
+# PRN212 - Practical Exam Kit
 
-# Submit Code First and Database First
+Bộ tài liệu tổng hợp đề thi thực hành, kịch bản CSDL và bài giải mẫu cho môn học **PRN212 (Basic Cross-Platform Application Programming with .NET)** tại FPT University.
 
-[Code First](https://github.com/LucFr1746/PRN212/tree/master/MyStore2)
-
-[Database First](https://github.com/LucFr1746/PRN212/tree/master/MyStore)
+👉 Thông tin chi tiết nằm tại thư mục **[PE_EXAM_KIT](./PE_EXAM_KIT)**.
