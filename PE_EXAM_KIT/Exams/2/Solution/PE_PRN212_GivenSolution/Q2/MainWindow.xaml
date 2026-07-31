@@ -1,7 +1,7 @@
 <Window x:Class="Q2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Resource Management" Height="650" Width="850" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="650" Width="850" WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <!-- 1. Filter Area (Auto height) -->
@@ -20,7 +20,7 @@
                 <TextBlock Text="Category:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox x:Name="cboFilterCategory" Width="150" Margin="0,0,15,0"/>
 
-                <TextBlock Text="Secondary:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="Supplier:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox x:Name="cboFilterSupplier" Width="150" Margin="0,0,15,0"/>
 
                 <Button Content="Filter" Click="FilterButton_Click" Width="80" Margin="0,0,5,0" Background="#10B981" Foreground="White" FontWeight="Bold"/>
@@ -31,14 +31,14 @@
         <!-- ======================================================= -->
         <!-- ZONE 2: DATA GRID LIST -->
         <!-- ======================================================= -->
-        <GroupBox Header="Data Records" Grid.Row="1" Margin="0,0,0,10">
-            <DataGrid x:Name="dgProducts" AutoGenerateColumns="False" IsReadOnly="True" AlternatingRowBackground="#F9FAFB" GridLinesVisibility="Horizontal">
+        <GroupBox Header="PRODUCT LIST" Grid.Row="1" Margin="0,0,0,10">
+            <DataGrid x:Name="dgProducts" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" SelectionChanged="DgRecords_SelectionChanged" AlternatingRowBackground="#F9FAFB" GridLinesVisibility="Horizontal">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding ProductId}" Width="50"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" Width="*"/>
-                    <DataGridTextColumn Header="Lookup Category" Binding="{Binding Category.CategoryName}" Width="150"/>
+                    <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="*"/>
                     <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:N2}}" Width="120"/>
-                    <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="100"/>
+                    <DataGridTextColumn Header="Stock" Binding="{Binding Stock, StringFormat={}{0:N0}}" Width="120"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category.CategoryName}" Width="150"/>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
@@ -48,19 +48,23 @@
         <!-- ======================================================= -->
         <GroupBox Header="Add New / Details" Grid.Row="2" Padding="10">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Left Column: Primary Fields -->
-                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Name:" VerticalAlignment="Center"/>
+                        <TextBlock Text="Product Name:" VerticalAlignment="Center"/>
                         <TextBox x:Name="txtProductName" Grid.Column="1" Padding="3"/>
                     </Grid>
 
@@ -69,10 +73,9 @@
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Numeric Value:" VerticalAlignment="Center"/>
+                        <TextBlock Text="Price:" VerticalAlignment="Center"/>
                         <TextBox x:Name="txtPrice" Grid.Column="1" Padding="3"/>
                     </Grid>
-
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
@@ -93,12 +96,12 @@
                 </StackPanel>
 
                 <!-- Right Column: Checkbox List (Many-to-Many Bridge) -->
-                <Grid Grid.Column="1">
+                <Grid Grid.Column="1" Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Associations:" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Suppliers:" FontWeight="Bold" Margin="0,0,0,5"/>
                     <ListBox x:Name="lstSuppliers" Grid.Row="1" Height="100" SelectionMode="Multiple">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -109,9 +112,9 @@
                 </Grid>
 
                 <!-- Lower Command Row -->
-                <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                    <Button Content="Save / Add" Click="AddProductButton_Click" Width="100" Margin="0,0,5,0" Padding="5" Background="#2563EB" Foreground="White" FontWeight="Bold"/>
-                    <Button Content="Reset Form" Click="ClearFormButton_Click" Width="100" Padding="5" Background="#9CA3AF" Foreground="White"/>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                    <Button Content="Save / Add" Click="SaveButton_Click" Width="100" Margin="0,0,5,0" Padding="5" Background="#2563EB" Foreground="White" FontWeight="Bold"/>
+                    <Button Content="Reset Form" Click="ResetButton_Click" Width="100" Padding="5" Background="#9CA3AF" Foreground="White"/>
                 </StackPanel>
             </Grid>
         </GroupBox>

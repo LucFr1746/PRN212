@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,15 +25,7 @@ public partial class Prn21226sprB11Context : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            try
-            {
-                optionsBuilder.UseSqlServer(Q2.Helpers.ConfigurationHelper.GetConnectionString("DefaultConnection"));
-            }
-            catch (System.Exception)
-            {
-                // Fallback connection string
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=PRN212_26SprB1_1;User Id=sa;Password=123123;TrustServerCertificate=True");
-            }
+            optionsBuilder.UseSqlServer(Q2.Helpers.ConfigurationHelper.GetConnectionString("DefaultConnection"));
         }
     }
 
@@ -41,14 +33,14 @@ public partial class Prn21226sprB11Context : DbContext
     {
         modelBuilder.Entity<Departments>(entity =>
         {
-            entity.HasKey(e => e.DepartmentId).HasName("PK__Departme__B2079BED1F92BD15");
+            entity.HasKey(e => e.DepartmentId).HasName("PK__Departme__B2079BEDAA0CC45A");
 
             entity.Property(e => e.DepartmentName).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Employees>(entity =>
         {
-            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__7AD04F1180D205EC");
+            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__7AD04F116B393772");
 
             entity.Property(e => e.Email).HasMaxLength(150);
             entity.Property(e => e.FullName).HasMaxLength(100);
@@ -78,7 +70,7 @@ public partial class Prn21226sprB11Context : DbContext
 
         modelBuilder.Entity<Skills>(entity =>
         {
-            entity.HasKey(e => e.SkillId).HasName("PK__Skills__DFA091870802AF6D");
+            entity.HasKey(e => e.SkillId).HasName("PK__Skills__DFA09187CC8F6F7C");
 
             entity.Property(e => e.SkillName).HasMaxLength(100);
         });

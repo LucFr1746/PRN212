@@ -25,14 +25,7 @@ public partial class Prn21226sprB12Context : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            try
-            {
-                optionsBuilder.UseSqlServer(Q2.Helpers.ConfigurationHelper.GetConnectionString("DefaultConnection"));
-            }
-            catch (System.Exception)
-            {
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=PRN212_26SprB1_2;User Id=sa;Password=123123;TrustServerCertificate=True");
-            }
+            optionsBuilder.UseSqlServer(Q2.Helpers.ConfigurationHelper.GetConnectionString("DefaultConnection"));
         }
     }
 
@@ -40,14 +33,14 @@ public partial class Prn21226sprB12Context : DbContext
     {
         modelBuilder.Entity<Categories>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B5C62977C");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A0B7B3928CF");
 
             entity.Property(e => e.CategoryName).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Products>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CD56AC4104");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6CD42803AF6");
 
             entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.ProductName).HasMaxLength(100);
@@ -76,7 +69,7 @@ public partial class Prn21226sprB12Context : DbContext
 
         modelBuilder.Entity<Suppliers>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B4175FC017");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B41AF68DEB");
 
             entity.Property(e => e.ContactEmail).HasMaxLength(150);
             entity.Property(e => e.SupplierName).HasMaxLength(100);
