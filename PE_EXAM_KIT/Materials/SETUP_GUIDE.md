@@ -461,6 +461,9 @@ private void FilterButton_Click(object sender, RoutedEventArgs e)
 
 #### `SaveButton_Click()`:
 
+> [!IMPORTANT]
+> **LƯU Ý:** Tùy theo cấu trúc CSDL của từng đề, Bước 4 & 5 trong `SaveButton_Click` sẽ thuộc **1 trong 3 Dạng** dưới đây. Mở `Models/` kiểm tra trước khi viết:
+
 ```csharp
 private void SaveButton_Click(object sender, RoutedEventArgs e)
 {
@@ -475,7 +478,7 @@ private void SaveButton_Click(object sender, RoutedEventArgs e)
     { WpfHelpers.ShowError("Invalid number."); return; }
     if (danhMucId == null) { WpfHelpers.ShowError("Select a category."); return; }
 
-    // 3. Validate CheckedListBox
+    // 3. Validate CheckedListBox (Bỏ qua bước này nếu đề chỉ có 1-N, không có CheckedListBox)
     var allPhu = lstTênEntityPhụ.ItemsSource as List<TênEntityPhụ>;
     var selectedPhu = allPhu?.Where(x => x.IsChecked).ToList() ?? new List<TênEntityPhụ>();
     if (selectedPhu.Count == 0) { WpfHelpers.ShowError("Select at least one item."); return; }
@@ -484,17 +487,34 @@ private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
         using (var context = new TÊN_CONTEXT())
         {
-            // 4. Tạo entity chính
             var entity = new TênEntityChính
             {
                 TênCột = ten,
                 CộtSố = soValue,
                 DanhMucId = Convert.ToInt32(danhMucId)
             };
-            context.TênBảngChính.Add(entity);
-            context.SaveChanges();  // Sinh ID tự động
 
-            // 5. Tạo bản ghi bridge (many-to-many)
+            // =========================================================
+            // DẠNG A: Quan hệ N-N Trực tiếp (KHÔNG CÓ class Bridge ghép như Đề 3)
+            // =========================================================
+            foreach (var phu in selectedPhu)
+            {
+                var dbPhu = context.TênBảngPhụ.Find(phu.PhuId);
+                if (dbPhu != null)
+                {
+                    entity.NavigationPhụ.Add(dbPhu); // EF Core tự chèn N-N vào SQL
+                }
+            }
+            context.TênBảngChính.Add(entity);
+            context.SaveChanges();
+
+            /*
+            // =========================================================
+            // DẠNG B: Có Class Bridge ghép riêng (ví dụ EmployeeSkill.cs)
+            // =========================================================
+            context.TênBảngChính.Add(entity);
+            context.SaveChanges(); // Sinh ID tự động trước
+
             foreach (var phu in selectedPhu)
             {
                 context.TênBảngBridge.Add(new TênBridge
@@ -504,6 +524,7 @@ private void SaveButton_Click(object sender, RoutedEventArgs e)
                 });
             }
             context.SaveChanges();
+            */
         }
 
         WpfHelpers.ShowInfo("Added successfully!");
@@ -546,7 +567,7 @@ Nhấn **Ctrl+Shift+B** → sửa lỗi nếu có → **Ctrl+F5** chạy thử �
 
 ## Bảng Tra Cứu & Quy Tắc Áp Dụng Cho Mọi Đề Thi (Universal Mapping Guide)
 
-### 1. Mô Hình 3 Bảng Chuẩn Của Mọi Đề PRN212 WPF
+### 1. Mô Hình 3 Bảng Chuẩn & Cách Phân Biệt Quan Hệ (1-N vs N-N)
 
 Mọi đề thi WPF PRN212 đều xoay quanh **3 Bảng chính** trong CSDL:
 
@@ -555,15 +576,15 @@ Mọi đề thi WPF PRN212 đều xoay quanh **3 Bảng chính** trong CSDL:
 (Categories / Departments / Authors)   (Products / Employees / Books)    (Suppliers / Skills / Genres)
 ```
 
-> [!TIP]
-> **Quy Tắc Nhận Diện Giao Diện Nhanh:**
-> - **Bảng Chính (Main):** Bảng xuất hiện ở DataGrid (`Products`, `Books`, `Employees`...).
-> - **Bảng Danh Mục (1-N):** Danh mục đổ vào ComboBox Dropdown (`Categories`, `Authors`, `Departments`...).
-> - **Bảng Phụ (N-N):** Danh sách tích chọn CheckBox (`Suppliers`, `Genres`, `Skills`...).
+#### 🔍 3 Cách Nhận Biết Quan Hệ 1-N Và N-N Trong Đề Thi:
 
-1. **Bảng Chính (Main Entity):** Đối tượng chính cần quản lý (Product, Employee, Book, Car...) ➔ Hiển thị trên DataGrid & Form nhập.
-2. **Bảng Danh Mục (1-N Lookup Entity):** Danh mục liên kết 1-N (Category, Department, Author, Brand...) ➔ Hiển thị ở ComboBox lọc & ComboBox form.
-3. **Bảng Phụ (N-N Bridge/Detail Entity):** Đối tượng liên kết N-N (Supplier, Skill, Genre, Feature...) ➔ Hiển thị ở ComboBox lọc & CheckedListBox form.
+| Dấu Hiệu Nhận Biết | Quan Hệ 1 - N (One-to-Many) | Quan Hệ N - N (Many-to-Many) |
+| :--- | :--- | :--- |
+| **1. Nhìn vào Giao diện (UI)** | Ở Form nhập có **1 ComboBox (Dropdown select)** ➔ Chỉ được chọn đúng 1 danh mục (Vd: 1 Nhân viên chọn 1 Phong ban). | Ở Form nhập có **1 ListBox chứa nhiều CheckBox** ➔ Được tích chọn nhiều mục cùng lúc (Vd: 1 Nhân viên chọn nhiều Kỹ năng). |
+| **2. Nhìn vào CSDL (`script.sql`)** | Bảng chính có chứa cột khóa ngoại `DepartmentId INT REFERENCES Departments(...)`. | Có xuất hiện **Bảng Trung Gian (Bridge Table)** chứa 2 khóa ngoại ghép làm khóa chính (Vd: `EmployeeSkills(EmployeeId, SkillId)`). |
+| **3. Nhìn vào Model C# (`Models/`)** | Kiểu thuộc tính đơn lẻ: `public virtual Department Department { get; set; }` | Kiểu tập hợp `ICollection<T>`: `public virtual ICollection<Skill> Skills { get; set; }` (hoặc `EmployeeSkills`). |
+
+---
 
 ---
 
