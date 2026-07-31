@@ -1,11 +1,13 @@
-# HƯỚNG DẪN SETUP TRƯỚC KHI THI (Offline Preparation)
+# HƯỚNG DẪN SETUP & QUY TRÌNH LÀM BÀI THI PRN212
 
-> **Mục đích:** Tải hết thư viện NuGet, build sẵn solution để khi vào phòng thi (không có mạng) chỉ cần mở và code.
+> **Mục đích:** Tải hết thư viện NuGet, build sẵn solution, và có quy trình chuẩn để vào thi làm bài nhanh nhất.
 
 > [!IMPORTANT]
 > **Tên SQL Server Instance:** Hướng dẫn này dùng `.\SQLEXPRESS` (SQL Server Express). Nếu máy thi dùng instance khác, mở **SSMS** → xem tên server ở cửa sổ **Connect to Server** → thay vào tất cả chỗ có `.\SQLEXPRESS`.
 
 ---
+
+# PHẦN 1: SETUP TRƯỚC KHI THI (Làm ở nhà, CÓ MẠNG)
 
 ## Tình trạng Solution từ nhà trường
 
@@ -24,8 +26,6 @@ Solution gốc từ trường **thiếu** package `Microsoft.EntityFrameworkCore
 > Nếu không có package này, khi vào thi bạn sẽ **KHÔNG** scaffold được database → mất thời gian tìm cách sửa mà lại không có mạng để cài.
 
 ---
-
-## Hướng dẫn Setup (Làm tại nhà, CÓ MẠNG)
 
 ### Bước 1 — Mở Solution trong Visual Studio 2022
 
@@ -91,7 +91,7 @@ Build succeeded.
 
 Bước này đảm bảo lệnh scaffold hoạt động trước khi vào thi. Tạo 1 database test nhanh:
 
-1. Mở **SSMS** → chạy:
+1. Mở **SSMS** (kết nối tới `.\SQLEXPRESS`) → chạy:
 ```sql
 CREATE DATABASE TestScaffoldDB;
 GO
@@ -108,7 +108,7 @@ Scaffold-DbContext "Server=.\SQLEXPRESS;Database=TestScaffoldDB;Trusted_Connecti
 
 3. Nếu thấy thư mục `TestModels/` xuất hiện trong project Q2 với file `TestTable.cs` + Context → **Scaffold hoạt động**.
 
-4. **Test sửa DbContext (quan trọng):** Mở file `TestModels/TestScaffoldDbContext.cs` (hoặc tên tương tự) → tìm hàm `OnConfiguring` → thay nội dung bằng:
+4. **Test sửa DbContext:** Mở file `TestModels/TestScaffoldDbContext.cs` → tìm hàm `OnConfiguring` → thay nội dung bằng:
 
 ```csharp
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -119,9 +119,6 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     }
 }
 ```
-
-> [!TIP]
-> Bước này chỉ để test scaffold hoạt động. Khi thi thật, bạn sẽ dùng `ConfigurationHelper` + `appsettings.json` thay vì hardcode connection string (xem SOLUTION_GUIDE).
 
 5. **Build lại** solution (Ctrl+Shift+B) — phải **0 errors**.
 
@@ -173,3 +170,405 @@ Nếu cả 4 đều có → packages đã được cache cục bộ trong thư m
 
 > [!IMPORTANT]
 > **Package `Tools` là package mà solution gốc từ trường THIẾU.** Nếu bạn dùng máy mới hoặc copy solution từ nguồn khác, nhớ kiểm tra lại và cài nếu thiếu.
+
+---
+---
+
+# PHẦN 2: QUY TRÌNH LÀM BÀI TRONG PHÒNG THI (Không có mạng)
+
+> **Tổng thời gian:** 85 phút → Phân bổ: Setup 10p → Q1 Console 20p → Q2 WPF 45p → Kiểm tra 10p
+
+## Bước A — Nhận đề & Setup nền (10 phút)
+
+### A1. Đọc đề, xác định dạng
+
+| Nếu đề có... | Dạng | Kit cần dùng |
+|:-------------|:-----|:-------------|
+| Q1: Delegate + Interface + Abstract class + Manager | **Dạng 1-4** | `ConsoleOOPTemplate.cs` |
+| Q1: Generic class `DataVault<T>` | **Dạng 5** | `ConsoleOOPTemplate.cs` (phần 6) |
+| Q2: Filter ComboBox + Add form + CheckedListBox | **Dạng 1-4** | `CrudWindowTemplate.xaml/.cs` |
+| Q2: Login + Navigation shell + Inline grid CRUD | **Dạng 5** | `LoginWindowTemplate` + `InlineGridCrudTemplate` |
+
+### A2. Chạy SQL Script
+
+1. Mở **SSMS** → kết nối tới `.\SQLEXPRESS`.
+2. Mở file `.sql` đề thi → nhấn **F5** thực thi.
+3. Xác nhận database và bảng đã tạo thành công.
+
+### A3. Scaffold Database vào Project Q2
+
+1. Mở **Package Manager Console** (Tools → NuGet Package Manager → PMC).
+2. Dropdown **Default project** → chọn **Q2**.
+3. Chạy lệnh (thay `TÊN_DATABASE` bằng tên DB thực tế):
+
+```powershell
+Scaffold-DbContext "Server=.\SQLEXPRESS;Database=TÊN_DATABASE;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force -NoPluralize
+```
+
+4. Kiểm tra thư mục `Models/` xuất hiện với đầy đủ file entity + DbContext.
+
+### A4. Tạo appsettings.json
+
+1. Chuột phải **Q2** → **Add** → **New Item** → **JSON File** → tên `appsettings.json`.
+2. Paste (thay `TÊN_DATABASE`):
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.\SQLEXPRESS;Database=TÊN_DATABASE;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
+
+3. **Chuột phải `appsettings.json`** → **Properties** → **Copy to Output Directory** = **Copy if newer**.
+
+> [!CAUTION]
+> Quên bước 3 = **mất toàn bộ điểm Q2** vì chương trình không đọc được connection string.
+
+### A5. Copy 4 file Helper từ Kit
+
+| File nguồn trong Kit | Copy vào Project Q2 |
+|:---------------------|:--------------------|
+| `Kits/Foundation/ConfigurationHelper.cs` | `Q2/Helpers/ConfigurationHelper.cs` |
+| `Kits/Common/ComboBoxExtensions.cs` | `Q2/Helpers/ComboBoxExtensions.cs` |
+| `Kits/Common/ValidationHelpers.cs` | `Q2/Helpers/ValidationHelpers.cs` |
+| `Kits/Common/WpfHelpers.cs` | `Q2/Helpers/WpfHelpers.cs` |
+
+Sau khi copy, **Ctrl+H** trong mỗi file đổi namespace:
+- `PRN212.ExamKit.Foundation` → `Q2.Helpers`
+- `PRN212.ExamKit.Common` → `Q2.Helpers`
+
+### A6. Sửa DbContext — đọc connection string từ appsettings.json
+
+Mở file `Models/...Context.cs` → tìm hàm `OnConfiguring` → **xóa hết** nội dung → thay bằng:
+
+```csharp
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    if (!optionsBuilder.IsConfigured)
+    {
+        optionsBuilder.UseSqlServer(Q2.Helpers.ConfigurationHelper.GetConnectionString("DefaultConnection"));
+    }
+}
+```
+
+> [!WARNING]
+> Xóa dòng `#warning To protect potentially sensitive information...` nếu có.
+
+### A7. Tạo Partial Class cho entity nhiều-nhiều (CheckedListBox)
+
+Nhìn đề xem entity nào dùng CheckedListBox (bảng phụ many-to-many, ví dụ: `Skill`, `Genre`, `Supplier`...).
+
+Tạo file `Models/PartialEntities.cs`:
+
+```csharp
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Q2.Models  // Phải trùng namespace với file entity được scaffold
+{
+    public partial class TÊN_ENTITY_PHỤ  // Ví dụ: Skill, Genre, Supplier...
+    {
+        [NotMapped]
+        public bool IsChecked { get; set; }
+    }
+}
+```
+
+### A8. Build kiểm tra
+
+Nhấn **Ctrl+Shift+B** → phải **0 errors** trước khi bắt đầu code.
+
+---
+
+## Bước B — Câu 1: Console App (20 phút)
+
+### B1. Xác định dạng Q1 và copy template
+
+Mở `Kits/Snippets/ConsoleOOPTemplate.cs` → xác định phần nào cần dùng:
+
+| Đề yêu cầu | Copy phần nào |
+|:-----------|:--------------|
+| Student + Score + Manager | Phần 3A + 4A + 5A + 7A |
+| Product + Discount + Manager | Phần 3B + 4B + 5B + 7B |
+| DataVault\<T\> generic | Phần 6 |
+
+### B2. Ctrl+H đổi tên
+
+Dựa vào đề thi, lập bảng đổi tên. **Luôn đổi tên concrete class TRƯỚC abstract class.**
+
+Ví dụ nếu đề dùng dạng Student → Course:
+
+| Tìm | Thay | Thứ tự |
+|:----|:-----|:-------|
+| `UndergraduateStudent` | `TênConcreteClass` | **1 (trước)** |
+| `Student` | `TênAbstractClass` | **2 (sau)** |
+| `ScoreManager` | `TênManager` | 3 |
+| `StudentId` → `FullName` → `Scores`... | Tên property theo đề | 4+ |
+
+### B3. Sửa logic khác biệt
+
+- **Khoảng validation** (ví dụ `[0, 10]` → `[1, 5]`)
+- **Bảng xếp hạng** (ví dụ `GetRank()` → `GetGrade()` với ngưỡng khác)
+- **Thông báo lỗi** (thay message cho khớp đề)
+
+### B4. Viết Main, build & test
+
+Uncomment block Main tương ứng → sửa dữ liệu test → **Ctrl+F5** chạy thử.
+
+---
+
+## Bước C — Câu 2: WPF App (45 phút)
+
+### C1. Copy XAML template → MainWindow.xaml
+
+1. Mở `Kits/Templates/CrudWindowTemplate.xaml` → **copy toàn bộ** → paste vào `MainWindow.xaml`.
+2. **Sửa dòng đầu:**
+```xml
+<Window x:Class="Q2.MainWindow"
+        ...
+        Title="Tên cửa sổ theo đề" Height="650" Width="850" ...>
+```
+
+### C2. Sửa Zone 1 (Filter) — đổi tên ComboBox
+
+```xml
+<!-- Đổi label + tên control cho đúng đề -->
+<TextBlock Text="TênDanhMục:" .../>         <!-- Ví dụ: Author, Department -->
+<ComboBox x:Name="cboFilterDanhMuc" .../>
+
+<TextBlock Text="TênPhụ:" .../>              <!-- Ví dụ: Genre, Skill -->
+<ComboBox x:Name="cboFilterPhu" .../>
+```
+
+### C3. Sửa Zone 2 (DataGrid) — đổi cột binding
+
+```xml
+<DataGrid x:Name="dgTênEntity" AutoGenerateColumns="False" IsReadOnly="True" ...>
+    <DataGrid.Columns>
+        <DataGridTextColumn Header="ID" Binding="{Binding TênId}" Width="60"/>
+        <DataGridTextColumn Header="Tên" Binding="{Binding TênCột}" Width="*"/>
+        <DataGridTextColumn Header="Số" Binding="{Binding CộtSố, StringFormat={}{0:N2}}" Width="120"/>
+        <DataGridTextColumn Header="Danh mục" Binding="{Binding NavigationProperty.TênHiểnThị}" Width="150"/>
+    </DataGrid.Columns>
+</DataGrid>
+```
+
+> [!WARNING]
+> **XÓA** thuộc tính `SelectionChanged="DgRecords_SelectionChanged"` nếu đề không yêu cầu click-to-edit. Nếu để lại sẽ lỗi compile.
+
+### C4. Sửa Zone 3 (Form nhập) — đổi tên TextBox + ComboBox + ListBox
+
+- Đổi `txtName` → `txtTênTrường` (theo đề)
+- Đổi `txtNumericValue` → `txtTênSố`
+- Thêm TextBox nếu đề cần nhiều hơn 2 trường (copy 1 block Grid + đổi tên)
+- Đổi `cboCategory` → `cboTênDanhMục`
+- Đổi `lstCheckedItems` → `lstTênEntityPhụ`
+- Sửa `Content="{Binding TênHiểnThị}"` trong CheckBox template
+
+### C5. Code-behind — Copy template + bỏ comment + đổi tên
+
+1. Mở `Kits/Templates/CrudWindowTemplate.xaml.cs` → copy toàn bộ vào `MainWindow.xaml.cs`.
+2. **Sửa namespace:**
+```csharp
+// Đổi:
+namespace PRN212.ExamKit.Templates → namespace Q2
+// Đổi class:
+public partial class CrudWindow → public partial class MainWindow
+// Đổi using:
+using PRN212.ExamKit.Common → using Q2.Helpers
+// Thêm:
+using Q2.Models;
+using Microsoft.EntityFrameworkCore;
+```
+
+3. **Bỏ comment từng block và đổi tên entity.** Quy trình cho mỗi hàm:
+
+#### `LoadInitData()` — Bỏ comment + đổi tên:
+
+```csharp
+private void LoadInitData()
+{
+    try
+    {
+        using (var context = new TÊN_CONTEXT())
+        {
+            var danhMucs = context.TênBảngDanhMục.ToList();        // Ví dụ: Authors
+            var entityPhus = context.TênBảngPhụ.ToList();          // Ví dụ: Genres
+
+            // Filter ComboBox có "All"
+            cboFilterDanhMuc.LoadWithDefault(danhMucs, "TênHiểnThị", "TênId",
+                () => new TênEntity { TênId = 0, TênHiểnThị = "All" });
+            cboFilterPhu.LoadWithDefault(entityPhus, "TênHiểnThị", "TênId",
+                () => new TênEntity { TênId = 0, TênHiểnThị = "All" });
+
+            // Form ComboBox (không có "All")
+            cboTênDanhMục.ItemsSource = danhMucs;
+            cboTênDanhMục.DisplayMemberPath = "TênHiểnThị";
+            cboTênDanhMục.SelectedValuePath = "TênId";
+            cboTênDanhMục.SelectedIndex = 0;
+
+            // CheckedListBox
+            lstTênEntityPhụ.ItemsSource = entityPhus;
+        }
+        RefreshGrid();
+    }
+    catch (Exception ex) { WpfHelpers.ShowError($"Failed to load: {ex.Message}"); }
+}
+```
+
+#### `RefreshGrid()`:
+
+```csharp
+private void RefreshGrid()
+{
+    using (var context = new TÊN_CONTEXT())
+    {
+        dgTênEntity.ItemsSource = context.TênBảngChính
+            .Include(x => x.NavigationDanhMục)   // Ví dụ: .Include(b => b.Author)
+            .ToList();
+    }
+}
+```
+
+#### `FilterButton_Click()`:
+
+```csharp
+private void FilterButton_Click(object sender, RoutedEventArgs e)
+{
+    try
+    {
+        int danhMucId = Convert.ToInt32(cboFilterDanhMuc.SelectedValue);
+        int phuId = Convert.ToInt32(cboFilterPhu.SelectedValue);
+
+        using (var context = new TÊN_CONTEXT())
+        {
+            IQueryable<TênEntityChính> query = context.TênBảngChính
+                .Include(x => x.NavigationDanhMục)
+                .Include(x => x.TênBảngBridge);
+
+            if (danhMucId > 0)
+                query = query.Where(x => x.DanhMucId == danhMucId);
+
+            if (phuId > 0)
+                query = query.Where(x => x.TênBảngBridge.Any(b => b.PhuId == phuId));
+
+            dgTênEntity.ItemsSource = query.ToList();
+        }
+    }
+    catch (Exception ex) { WpfHelpers.ShowError($"Filter error: {ex.Message}"); }
+}
+```
+
+#### `SaveButton_Click()`:
+
+```csharp
+private void SaveButton_Click(object sender, RoutedEventArgs e)
+{
+    // 1. Đọc input
+    var ten = txtTênTrường.Text.Trim();
+    var soText = txtTênSố.Text.Trim();
+    var danhMucId = cboTênDanhMục.SelectedValue;
+
+    // 2. Validate
+    if (!ValidationHelpers.IsRequired(ten)) { WpfHelpers.ShowError("Tên is required."); return; }
+    if (!ValidationHelpers.TryParseDecimal(soText, out decimal soValue) || soValue <= 0)
+    { WpfHelpers.ShowError("Invalid number."); return; }
+    if (danhMucId == null) { WpfHelpers.ShowError("Select a category."); return; }
+
+    // 3. Validate CheckedListBox
+    var allPhu = lstTênEntityPhụ.ItemsSource as List<TênEntityPhụ>;
+    var selectedPhu = allPhu?.Where(x => x.IsChecked).ToList() ?? new List<TênEntityPhụ>();
+    if (selectedPhu.Count == 0) { WpfHelpers.ShowError("Select at least one item."); return; }
+
+    try
+    {
+        using (var context = new TÊN_CONTEXT())
+        {
+            // 4. Tạo entity chính
+            var entity = new TênEntityChính
+            {
+                TênCột = ten,
+                CộtSố = soValue,
+                DanhMucId = Convert.ToInt32(danhMucId)
+            };
+            context.TênBảngChính.Add(entity);
+            context.SaveChanges();  // Sinh ID tự động
+
+            // 5. Tạo bản ghi bridge (many-to-many)
+            foreach (var phu in selectedPhu)
+            {
+                context.TênBảngBridge.Add(new TênBridge
+                {
+                    EntityChínhId = entity.Id,
+                    PhuId = phu.PhuId
+                });
+            }
+            context.SaveChanges();
+        }
+
+        WpfHelpers.ShowInfo("Added successfully!");
+        RefreshGrid();
+        ResetForm();
+    }
+    catch (Exception ex) { WpfHelpers.ShowError($"Error: {ex.Message}"); }
+}
+```
+
+#### `ResetForm()`:
+
+```csharp
+private void ResetForm()
+{
+    txtTênTrường.Text = string.Empty;
+    txtTênSố.Text = string.Empty;
+    cboTênDanhMục.SelectedIndex = 0;
+
+    var allPhu = lstTênEntityPhụ.ItemsSource as List<TênEntityPhụ>;
+    if (allPhu != null) foreach (var x in allPhu) x.IsChecked = false;
+    lstTênEntityPhụ.Items.Refresh();
+}
+```
+
+### C6. Build & Test
+
+Nhấn **Ctrl+Shift+B** → sửa lỗi nếu có → **Ctrl+F5** chạy thử → test từng chức năng.
+
+---
+
+## Bước D — Trước khi nộp bài (5 phút)
+
+1. **Xóa package `Tools`** khỏi `Q2.csproj` (không cần cho runtime, tránh bị trừ điểm cài thêm package).
+2. **Build lại** (Ctrl+Shift+B) → phải 0 errors.
+3. Chuột phải **Solution** → **Clean Solution** → xóa `bin/obj` giảm dung lượng.
+4. Nộp bài.
+
+---
+
+## Bảng Tra Cứu Nhanh — Đổi Tên Theo Đề
+
+Dùng bảng này để map tên trong template → tên trong đề thi:
+
+| Template (Kit) | Thay bằng (ví dụ đề Book) | Thay bằng (ví dụ đề Employee) |
+|:---------------|:--------------------------|:------------------------------|
+| `TÊN_DATABASE` | `BookStoreDB` | `CompanyDB` |
+| `TÊN_CONTEXT` | `BookStoreDbContext` | `CompanyDbContext` |
+| `TênBảngChính` | `Books` | `Employees` |
+| `TênBảngDanhMục` | `Authors` | `Departments` |
+| `TênBảngPhụ` | `Genres` | `Skills` |
+| `TênBảngBridge` | `BookGenres` | `EmployeeSkills` |
+| `TênEntityChính` | `Book` | `Employee` |
+| `TênEntityPhụ` | `Genre` | `Skill` |
+| `NavigationDanhMục` | `Author` | `Department` |
+| `DanhMucId` | `AuthorId` | `DepartmentId` |
+| `PhuId` | `GenreId` | `SkillId` |
+| `TênCột` | `Title` | `FullName` |
+| `CộtSố` | `Price` | `Salary` |
+| `TênHiểnThị` (danh mục) | `AuthorName` | `DepartmentName` |
+| `TênHiểnThị` (phụ) | `GenreName` | `SkillName` |
+| `dgTênEntity` | `dgBooks` | `dgEmployees` |
+| `cboFilterDanhMuc` | `cboFilterAuthor` | `cboFilterDept` |
+| `cboFilterPhu` | `cboFilterGenre` | `cboFilterSkill` |
+| `cboTênDanhMục` | `cboAuthor` | `cboDept` |
+| `lstTênEntityPhụ` | `lstGenres` | `lstSkills` |
+| `txtTênTrường` | `txtTitle` | `txtFullName` |
+| `txtTênSố` | `txtPrice` | `txtSalary` |
