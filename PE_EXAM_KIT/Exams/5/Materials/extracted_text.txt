@@ -1,0 +1,135 @@
+PRACTICAL EXAMINATION
+
+Subject code: PRN212 - FA25 Duration: 85 minutes
+
+Notes:
+
+Only allowed to access the Internet during the first 5 minutes to install packages via NuGet.
+
+The tables must be related as shown in the requirements above, and these relationships are automatically generated through Code First or Database First.
+
+The DataConnectionString must be declared in appsettings.json.
+
+You may use local resources, but internet access is restricted to downloading the exam, submitting your work, and installing packages via NuGet.
+
+Fully implemented according to software architecture and design principles, transition from tight coupling to loose coupling such as BusinessLogic, DataAccess.
+
+If the code does not run, the students’ work will receive a score of zero.
+
+Question 1 (3.5 marks)
+
+Create a Console Project named StudyPlannerUtilityApp 
+
+Create a generic class DataVault<T> to store any type of data (0.5 mark)
+
+ The class should have:
+
+Items: List<T> property
+
+Add(T item) method
+
+FindAll(Func<T, bool> predicate): IEnumerable<T> method
+
+Remove(T item) method
+
+Count(): int method
+
+Create a StudyTask class (1.0 mark)Properties (0.5 mark):
+
+TaskId (int)
+
+Subject (string)
+
+Description (string)
+
+Priority (int) – 1 = High, 2 = Medium, 3 = Low
+
+DayOfWeek (string) – e.g. “Monday”, “Tuesday”, …
+
+Methods (0.5 mark):
+
+Override ToString() → "[TaskId] Subject - Priority: Priority (Day: DayOfWeek)"
+
+Use the Generic Class + LINQ (2 marks)In Main() method:
+
+Create a DataVault<StudyTask> and add at least 6 tasks with different priorities and days (0.25 mark)
+
+Display all tasks before sorting (0.25 mark).
+
+Sort the tasks by Priority (ascending) using LINQ and display the sorted list (0.5 mark).
+
+Use LINQ to filter and display tasks with Priority == 1 (High) (0.5 mark).
+
+Use LINQ to group tasks by Priority and display each group with its task count (0.5 mark).
+
+Example output:
+
+Question 2 (6.5 marks)
+
+A team wants to develop a simple Study Planner Management System to help students manage their study schedules and weekly tasks.
+
+Create a Library Project StudyPlannerDataAccess inside a solution named StudyPlannerSystem with BussinessLayer, DataAccessLayer, RepositoryLayer and ServicesLayer (0.5 mark)
+
+Create database DBMStudyPlanner and generate related tables (0.25 mark)
+
+Use Entity Framework Core (Code First or Database First) with the following classes and relationships (1 mark)
+
+Student: StudentId, StudentCode, FullName, Email, Password
+
+Subject: SubjectId, SubjectCode, SubjectName
+
+StudyTask: TaskId, StudentId, SubjectId, Description, DayOfWeek, IsCompleted
+
+Relationships:
+
+One Student can have many StudyTasks (1–n)
+
+One Subject can have many StudyTasks (1–n)
+
+StudyPlannerDataAccess contains EF, DbContext, entity, DAO classes.
+
+StudyPlannerBusiness contains all business logic.
+
+Create a WPF Application namely StudyPlannerApp (5 marks)
+
+Student Login (1 mark)
+
+A login form where students enter StudentCode and Password (0.25 mark).
+
+Validate credentials from the database (0.5 mark).
+
+If valid → navigate to MainWindow; otherwise → show 'Invalid StudentCode or Password' (0.25 mark)
+
+MainWindow with Menu: Study Tasks and Subjects (0.5 mark)
+
+Study Tasks Management (1.5 mark)
+
+Display all tasks with: Subject Code and Subject Name. (0.5)
+
+Add a new subject. (0.5)
+
+Edit existing subject. (0.25)
+
+Delete subject (0.25)
+
+My study tasks (0.5 mark)
+
+My Progress (1 mark)
+
+Display total number of completed tasks for the logged-in student. (0.5 mark)
+
+Calculate completion rate percentage (0.5 mark)
+
+Logout Functionality (0.25 mark)
+
+Logout button that returns user to login screen.
+
+When clicking Yes button, Login Window will display.
+
+Submission Requirements:
+
+Submit all project files
+
+Ensure that no personal identifiers (name or student ID) are included in the submission.
+
+--END--

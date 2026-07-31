@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="StudyPlannerSystem.csproj" />
+  <Project Path="StudyPlannerDataAccess\StudyPlannerDataAccess.csproj" />
+  <Project Path="StudyPlannerRepository\StudyPlannerRepository.csproj" />
+  <Project Path="StudyPlannerBusiness\StudyPlannerBusiness.csproj" />
+  <Project Path="StudyPlannerServices\StudyPlannerServices.csproj" />
+</Solution>

@@ -1,0 +1,17 @@
+# Visual Studio & IDE
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Archives & Temporary copies
+*.zip
+*.rar
+* - Copy/
