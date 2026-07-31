@@ -8,9 +8,15 @@ These snippets provide the exact commands and code configurations required to ex
 Run this inside Package Manager Console in Visual Studio. Ensure your default project in the PMC dropdown points to the project where you want your database entities to reside (e.g. `DataAccess` or `WpfApp`).
 
 ```powershell
-Scaffold-DbContext "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutDir Models -Force -NoPluralize
+Scaffold-DbContext "Server=.\SQLEXPRESS;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force -NoPluralize
 ```
 *Replace `DB_NAME` with the exact name of the database created by your SQL script (e.g., `DBStudyPlanner` or `CompanyDB`).*
+
+> [!WARNING]
+> **Tên Server phụ thuộc vào máy thi:**
+> - Nếu dùng **SQL Server Express**: thay `(local)` bằng `.\SQLEXPRESS` hoặc `(localdb)\MSSQLLocalDB`
+> - Nếu dùng **SQL Server Developer/Standard**: dùng `(local)` hoặc `.` hoặc `localhost`
+> - **Cách kiểm tra nhanh:** mở SSMS, xem tên server ở cửa sổ Connect → đó là giá trị đúng.
 
 ---
 
@@ -18,7 +24,7 @@ Scaffold-DbContext "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServe
 If you prefer running scaffolding from the PowerShell terminal, use this command:
 
 ```bash
-dotnet ef dbcontext scaffold "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -o Models -f --no-pluralize
+dotnet ef dbcontext scaffold "Server=.\SQLEXPRESS;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -o Models -f --no-pluralize
 ```
 
 ---
@@ -44,7 +50,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             System.Diagnostics.Debug.WriteLine($"Failed to load connection string from config: {ex.Message}");
             
             // Fallback connection string in case appsettings.json is missing in testing environment
-            optionsBuilder.UseSqlServer("Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=.\SQLEXPRESS;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }
@@ -58,7 +64,7 @@ Create a file named `appsettings.json` in the root of your WPF application and i
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True;"
+    "DefaultConnection": "Server=.\SQLEXPRESS;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
 ```

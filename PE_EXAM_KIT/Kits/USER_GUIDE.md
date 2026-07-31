@@ -16,7 +16,7 @@ Thực hiện đúng trình tự sau ngay khi bắt đầu giờ thi:
 ### 2. Scaffold Database First
 Mở **Package Manager Console** trong Visual Studio. Chọn dự án chứa database layer của bạn (thường là dự án Class Library `DataAccess` hoặc dự án `WpfApp` nếu là single-project) và chạy lệnh:
 ```powershell
-Scaffold-DbContext "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutDir Models -Force -NoPluralize
+Scaffold-DbContext "Server=.\SQLEXPRESS;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force -NoPluralize
 ```
 *Lưu ý: Thay thế `DB_NAME` bằng tên cơ sở dữ liệu thực tế vừa tạo.*
 
@@ -25,7 +25,7 @@ Scaffold-DbContext "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServe
    ```json
    {
      "ConnectionStrings": {
-       "DefaultConnection": "Server=.;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True;"
+       "DefaultConnection": "Server=.\SQLEXPRESS;Database=DB_NAME;Trusted_Connection=True;TrustServerCertificate=True;"
      }
    }
    ```

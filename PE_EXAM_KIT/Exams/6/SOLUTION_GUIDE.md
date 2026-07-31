@@ -27,8 +27,11 @@
 3. Paste lệnh sau và nhấn **Enter**:
 
 ```powershell
-Scaffold-DbContext "Server=.;Database=BookStoreDB;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutDir Models -Force -NoPluralize
+Scaffold-DbContext "Server=.\SQLEXPRESS;Database=BookStoreDB;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force -NoPluralize
 ```
+
+> [!WARNING]
+> **Tên Server có thể khác trên máy thi!** Hướng dẫn này dùng `.\SQLEXPRESS`. Nếu máy thi dùng tên khác, mở **SSMS** → xem tên server ở cửa sổ Connect → thay vào chỗ `.\SQLEXPRESS`.
 
 4. Đợi chạy xong → thấy thư mục `Models/` xuất hiện trong project Q2 với các file:
    - `BookStoreDbContext.cs` (hoặc tên tương tự)
@@ -52,7 +55,7 @@ Scaffold-DbContext "Server=.;Database=BookStoreDB;Trusted_Connection=True;TrustS
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=.;Database=BookStoreDB;Trusted_Connection=True;TrustServerCertificate=True;"
+    "DefaultConnection": "Server=.\SQLEXPRESS;Database=BookStoreDB;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
 ```
