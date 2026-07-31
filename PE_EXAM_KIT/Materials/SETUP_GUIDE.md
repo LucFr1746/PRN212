@@ -544,31 +544,69 @@ Nhấn **Ctrl+Shift+B** → sửa lỗi nếu có → **Ctrl+F5** chạy thử �
 
 ---
 
-## Bảng Tra Cứu Nhanh — Đổi Tên Theo Đề
+## Bảng Tra Cứu & Quy Tắc Áp Dụng Cho Mọi Đề Thi (Universal Mapping Guide)
 
-Dùng bảng này để map tên trong template → tên trong đề thi:
+### 1. Mô Hình 3 Bảng Chuẩn Của Mọi Đề PRN212 WPF
 
-| Template (Kit) | Thay bằng (ví dụ đề Book) | Thay bằng (ví dụ đề Employee) |
-|:---------------|:--------------------------|:------------------------------|
-| `TÊN_DATABASE` | `BookStoreDB` | `CompanyDB` |
-| `TÊN_CONTEXT` | `BookStoreDbContext` | `CompanyDbContext` |
-| `TênBảngChính` | `Books` | `Employees` |
-| `TênBảngDanhMục` | `Authors` | `Departments` |
-| `TênBảngPhụ` | `Genres` | `Skills` |
-| `TênBảngBridge` | `BookGenres` | `EmployeeSkills` |
-| `TênEntityChính` | `Book` | `Employee` |
-| `TênEntityPhụ` | `Genre` | `Skill` |
-| `NavigationDanhMục` | `Author` | `Department` |
-| `DanhMucId` | `AuthorId` | `DepartmentId` |
-| `PhuId` | `GenreId` | `SkillId` |
-| `TênCột` | `Title` | `FullName` |
-| `CộtSố` | `Price` | `Salary` |
-| `TênHiểnThị` (danh mục) | `AuthorName` | `DepartmentName` |
-| `TênHiểnThị` (phụ) | `GenreName` | `SkillName` |
-| `dgTênEntity` | `dgBooks` | `dgEmployees` |
-| `cboFilterDanhMuc` | `cboFilterAuthor` | `cboFilterDept` |
-| `cboFilterPhu` | `cboFilterGenre` | `cboFilterSkill` |
-| `cboTênDanhMục` | `cboAuthor` | `cboDept` |
-| `lstTênEntityPhụ` | `lstGenres` | `lstSkills` |
-| `txtTênTrường` | `txtTitle` | `txtFullName` |
-| `txtTênSố` | `txtPrice` | `txtSalary` |
+Mọi đề thi WPF PRN212 đều xoay quanh **3 Bảng chính** trong CSDL:
+
+```text
+[Bảng Danh Mục (1-N)]  ───< 1-N >───  [Bảng Chính (Main)]  ───< N-N >───  [Bảng Phụ (Supplier/Skill)]
+(Categories / Departments / Authors)   (Products / Employees / Books)    (Suppliers / Skills / Genres)
+```
+
+> [!TIP]
+> **Quy Tắc Nhận Diện Giao Diện Nhanh:**
+> - **Bảng Chính (Main):** Bảng xuất hiện ở DataGrid (`Products`, `Books`, `Employees`...).
+> - **Bảng Danh Mục (1-N):** Danh mục đổ vào ComboBox Dropdown (`Categories`, `Authors`, `Departments`...).
+> - **Bảng Phụ (N-N):** Danh sách tích chọn CheckBox (`Suppliers`, `Genres`, `Skills`...).
+
+1. **Bảng Chính (Main Entity):** Đối tượng chính cần quản lý (Product, Employee, Book, Car...) ➔ Hiển thị trên DataGrid & Form nhập.
+2. **Bảng Danh Mục (1-N Lookup Entity):** Danh mục liên kết 1-N (Category, Department, Author, Brand...) ➔ Hiển thị ở ComboBox lọc & ComboBox form.
+3. **Bảng Phụ (N-N Bridge/Detail Entity):** Đối tượng liên kết N-N (Supplier, Skill, Genre, Feature...) ➔ Hiển thị ở ComboBox lọc & CheckedListBox form.
+
+---
+
+### 2. Quy Tắc Quyết Định Cách Code Quan Hệ N-N (Cực Kỳ Quan Trọng)
+
+Trước khi viết hàm `SaveButton_Click`, mở thư mục `Models/` kiểm tra:
+
+- **Dạng A — Có Class Trung Gian (Ví dụ: `EmployeeSkill.cs`):**
+  - **Dấu hiệu:** Mở `Models/` thấy có file class tên ghép kiểu `EmployeeSkill.cs` hoặc `BookGenre.cs`.
+  - **Cách code:**
+    ```csharp
+    context.EmployeeSkills.Add(new EmployeeSkill { EmployeeId = entity.Id, SkillId = phu.SkillId });
+    ```
+- **Dạng B — Quan Hệ N-N Trực Tiếp (Ví dụ Đề 3 - Product & Supplier):**
+  - **Dấu hiệu:** Mở `Models/` **KHÔNG CÓ** class `ProductSupplier.cs`. EF Core tự tạo `public virtual ICollection<Suppliers> Supplier { get; set; }` trong `Products.cs`.
+  - **Cách code:**
+    ```csharp
+    entity.Supplier.Add(dbSupplier); // EF Core tự chèn vào bảng trung gian bên SQL
+    ```
+
+---
+
+### 3. Bảng Tra Cứu Tên Placeholder ➔ Tên Thực Tế Theo Đề Thi
+
+| Placeholder (Trong Guide) | Vai Trò (Role) | Đề 3 (Product) | Đề Book Store | Đề Employee |
+| :--- | :--- | :--- | :--- | :--- |
+| `TÊN_CONTEXT` | Class DbContext | `Prn21226sprB12Context` | `BookStoreDbContext` | `CompanyDbContext` |
+| `TênBảngChính` | DbSet Bảng chính | `context.Products` | `context.Books` | `context.Employees` |
+| `TênBảngDanhMục` | DbSet Bảng 1-N | `context.Categories` | `context.Authors` | `context.Departments` |
+| `TênBảngPhụ` | DbSet Bảng N-N | `context.Suppliers` | `context.Genres` | `context.Skills` |
+| `TênEntityChính` | Class Entity chính | `Products` | `Books` | `Employees` |
+| `TênEntityPhụ` | Class Entity phụ | `Suppliers` | `Genres` | `Skills` |
+| `NavigationDanhMục` | Navigation Prop (1-N) | `x.Category` | `x.Author` | `x.Department` |
+| `NavigationPhụ` | Navigation Prop (N-N) | `x.Supplier` | `x.BookGenres` (hoặc `Genre`) | `x.EmployeeSkills` (hoặc `Skill`) |
+| `TênHiểnThị` (Danh mục) | Tên hiển thị ComboBox 1-N | `CategoryName` | `AuthorName` | `DepartmentName` |
+| `TênHiểnThị` (Phụ) | Tên hiển thị CheckedListBox | `SupplierName` | `GenreName` | `SkillName` |
+| `DanhMucId` | Khóa chính Bảng 1-N | `CategoryId` | `AuthorId` | `DepartmentId` |
+| `PhuId` | Khóa chính Bảng N-N | `SupplierId` | `GenreId` | `SkillId` |
+| `txtTênTrường` | TextBox nhập tên | `txtName` (`ProductName`) | `txtTitle` (`Title`) | `txtFullName` (`FullName`) |
+| `txtTênSố` | TextBox nhập số | `txtPrice`, `txtStock` | `txtPrice` | `txtSalary` |
+| `cboFilterDanhMuc` | ComboBox lọc 1-N | `cboFilterCategory` | `cboFilterAuthor` | `cboFilterDept` |
+| `cboFilterPhu` | ComboBox lọc N-N | `cboFilterSupplier` | `cboFilterGenre` | `cboFilterSkill` |
+| `cboTênDanhMục` | ComboBox Form nhập 1-N | `cboCategory` | `cboAuthor` | `cboDept` |
+| `lstTênEntityPhụ` | ListBox Form nhập N-N | `lstCheckedItems` | `lstGenres` | `lstSkills` |
+| `dgTênEntity` | DataGrid hiển thị | `dgProduct` | `dgBooks` | `dgEmployees` |
+
